@@ -5,7 +5,7 @@ import { callStates } from "./Store/Actions/callActions";
 import { connect } from "react-redux";
 
 function App(callState, username) {
-  return <div>{callState != callStates.DISCONNECTED && <Entry />}</div>;
+  return <div>{callState !== callStates.DISCONNECTED && <Entry />}</div>;
 }
 
 const mapStateToProps = ({ call, dashboard }) => ({
