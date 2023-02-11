@@ -21,7 +21,7 @@ const twilioClient = require("twilio")(
 
 const findOrCreateRoom = async (roomName) => {
     try {
-        await twilioClient.video.rooms(roomName).fetch();
+        await twilioClient.video.v1.rooms(roomName).fetch();
     } catch (error) {
         if (error.code === 20404) {
             await twilioClient.video.v1.rooms.create({
