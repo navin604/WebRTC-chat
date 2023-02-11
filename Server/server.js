@@ -3,7 +3,6 @@ const {v4: uuidv4 } = require("uuid");
 const AccessToken = require("twilio").jwt.AccessToken;
 const VideoGrant = AccessToken.VideoGrant;
 const express = require("express");
-const {response} = require("express");
 const app = express();
 const cors = require("cors");
 const PORT = 8080;
@@ -24,7 +23,7 @@ const findOrCreateRoom = async (roomName) => {
     try {
         await twilioClient.video.rooms(roomName).fetch();
     } catch (error) {
-        if (error.code == 20404) {
+        if (error.code === 20404) {
             await twilioClient.video.v1.rooms.create({
                 uniqueName: roomName,
                 type: "go",
