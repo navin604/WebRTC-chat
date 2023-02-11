@@ -1,8 +1,12 @@
 import './App.css';
-
+import {useState} from "react";
+import Entry from "./Components/Entry";
 function App() {
+
+  const x = "disconnected";
   return (
-   <div>Welcome to twili app</div>
+      <div>{x == "disconnected" && <Entry/>}</div>
+
   );
 }
 
