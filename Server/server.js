@@ -5,10 +5,13 @@ const VideoGrant = AccessToken.VideoGrant;
 const express = require("express");
 const {response} = require("express");
 const app = express();
+const cors = require("cors");
 const PORT = 8080;
 
 // Use Express JSON Middleware
 app.use(express.json());
+
+app.use(cors());
 
 // create the twilioClient
 const twilioClient = require("twilio")(
@@ -22,7 +25,7 @@ const findOrCreateRoom = async (roomName) => {
         await twilioClient.video.rooms(roomName).fetch();
     } catch (error) {
         if (error.code == 20404) {
-            await twilioClient.video.rooms.create({
+            await twilioClient.video.v1.rooms.create({
                 uniqueName: roomName,
                 type: "go",
             });
@@ -68,5 +71,5 @@ app.post("/join-room", async (req, res) => {
     await findOrCreateRoom(roomName);
     // Generate an access token for a participant in this room
     const token = getAccessToken(roomName);
-    res.send({token: token,});
+    res.send({token: token});
 });
