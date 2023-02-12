@@ -6,19 +6,28 @@ const Entry = () => {
   const [roomName, setRoomName] = useState("");
   const [token, setToken] = useState("");
 
-  const handleButtonPress = (e) => {
+  const handleButtonPress = async (e) => {
     e.preventDefault();
     console.log("clicked submit");
     console.log(roomName);
     const req = { roomName: roomName };
-    axios
-      .post("http://localhost:8080/join-room", req)
-      .then((response) => setToken(response.data.token))
-      .catch((error) => {
-        console.error("There was an error!", error);
-      });
 
+    // fetch an Access Token from the join-room route
+    const response = await fetch("http://localhost:8080/join-room", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(req),
+    });
+    const { token } = await response.json();
+    setToken(token);
     console.log(`Received token: ${token}`);
+  };
+
+  const handle = () => {
+    console.log(token);
   };
 
   return (
@@ -35,6 +44,7 @@ const Entry = () => {
         />
         <br />
         <input type="button" value="Submit" onClick={handleButtonPress}></input>
+        <input type="button" value="Submit2" onClick={handle}></input>
       </form>
     </div>
   );
