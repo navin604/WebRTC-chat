@@ -1,6 +1,5 @@
 import { useState } from "react";
 import "./preJoinScreen.css";
-import axios from "axios";
 
 const Entry = () => {
   const [roomName, setRoomName] = useState("");
