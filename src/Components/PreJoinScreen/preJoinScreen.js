@@ -1,10 +1,14 @@
 import { useState } from "react";
 import "./preJoinScreen.css";
+import { connect as reactConnect } from "react-redux";
+import { setRoomName } from "../../Store/Actions/callActions";
+import { setCallState } from "../../Store/Actions/callActions";
+import * as callActions from "../../Store/Actions/callActions";
 
-const Entry = () => {
+const { connect } = require("twilio-video");
+
+const Entry = ({ saveRoom, setCall }) => {
   const [roomName, setRoomName] = useState("");
-  const [token, setToken] = useState("");
-
   const handleButtonPress = async (e) => {
     e.preventDefault();
     console.log("clicked submit");
@@ -21,16 +25,31 @@ const Entry = () => {
       body: JSON.stringify(req),
     });
     const { token } = await response.json();
-    setToken(token);
     console.log(`Received token: ${token}`);
+
+    // join video room with token
+    const room = await joinVideoRoom(roomName, token);
+    setCall(callActions.callStates.CONNECTED);
+    saveRoom(room);
+    console.log(`Room is ${room}`);
   };
 
-  const handle = () => {
-    console.log(token);
+  const joinVideoRoom = async (roomName, token) => {
+    try {
+      const room = await connect(token, {
+        roomName: roomName,
+        audio: true,
+        video: true,
+      });
+      saveRoom(room);
+      return room;
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
-    <div className="joinRoom">
+    <div>
       <form>
         <span>Room Name:</span>
         <input
@@ -43,10 +62,16 @@ const Entry = () => {
         />
         <br />
         <input type="button" value="Submit" onClick={handleButtonPress}></input>
-        <input type="button" value="Submit2" onClick={handle}></input>
       </form>
     </div>
   );
 };
 
-export default Entry;
+const mapActionsToProps = (dispatch) => {
+  return {
+    saveRoom: (roomName) => dispatch(setRoomName(roomName)),
+    setCall: (callStatus) => dispatch(setCallState(callStatus)),
+  };
+};
+
+export default reactConnect(null, mapActionsToProps)(Entry);
