@@ -1,20 +1,12 @@
-import "./App.css";
-import { callStates } from "./Store/Actions/callActions";
-import { connect } from "react-redux";
+import React from "react";
 import Entry from "./Components/PreJoinScreen/preJoinScreen";
-import Room from "./Components/Room/Room";
 
-const App = ({ callState }) => {
+const App = () => {
   return (
     <div>
-      {callState === callStates.DISCONNECTED && <Entry />}
-      {callState === callStates.CONNECTED && <Room />}
+      <Entry />
     </div>
   );
 };
 
-const mapStateToProps = ({ call }) => ({
-  ...call,
-});
-
-export default connect(mapStateToProps)(App);
+export default App;
