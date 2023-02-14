@@ -80,7 +80,7 @@ const Participant = (props) => {
     <div className="participant">
       <h3>{props.participant.identity.split(".")[0]}</h3>
       <video ref={videoRef} autoPlay={true} />
-      <audio ref={audioRef} autoPlay={true} muted={true} />
+      <audio ref={audioRef} autoPlay={true} muted={props.muted} />
     </div>
   );
 };

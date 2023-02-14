@@ -5,7 +5,7 @@ const VideoGrant = AccessToken.VideoGrant;
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
 
 // Use Express JSON Middleware
 app.use(express.json());

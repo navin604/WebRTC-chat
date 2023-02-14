@@ -32,9 +32,10 @@ const Room = ({ returnToLobby, room }) => {
       <Participant
         key={room.localParticipant.identity}
         participant={room.localParticipant}
+        muted={true}
       />
       {remoteParticipants.map((participant) => (
-        <Participant key={participant.identity} participant={participant} />
+        <Participant key={participant.identity} participant={participant} muted={false} />
       ))}
       <button onClick={returnToLobby}>Leave Call</button>
     </div>

@@ -14,7 +14,7 @@ const PreJoinScreen = () => {
     try {
       console.log("Clicked submit, handling form");
       const req = { roomName: roomName, identity: username };
-      const response = await fetch("http://localhost:8080/join-room", {
+      const response = await fetch("https://majorprojtest.azurewebsites.net/join-room", {
         method: "POST",
         headers: {
           Accept: "application/json",
