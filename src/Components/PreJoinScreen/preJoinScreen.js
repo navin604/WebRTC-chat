@@ -10,11 +10,12 @@ const PreJoinScreen = () => {
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
+
     console.log(`Username: ${username}. roomname: ${roomName}`);
     try {
       console.log("Clicked submit, handling form");
       const req = { roomName: roomName, identity: username };
-      const response = await fetch("https://majorprojtest.azurewebsites.net/join-room", {
+      const response = await fetch("http://localhost:7000/join-room", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -33,6 +34,7 @@ const PreJoinScreen = () => {
   };
 
   const joinVideoRoom = async (roomName, data) => {
+
     try {
       const room = await connect(data, {
         roomName: roomName,
@@ -42,6 +44,7 @@ const PreJoinScreen = () => {
       setRoom(room);
       return room;
     } catch (error) {
+      console.log(`error on connect`);
       console.log(error);
     }
   };
@@ -67,6 +70,9 @@ const PreJoinScreen = () => {
 
   return (
     <div>
+
+
+
       {room === null ? (
         <form onSubmit={handleFormSubmit}>
           <input

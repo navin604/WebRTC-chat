@@ -7,6 +7,11 @@ const app = express();
 const cors = require("cors");
 const PORT = process.env.PORT || 8080;
 
+
+
+
+
+
 // Use Express JSON Middleware
 app.use(express.json());
 
@@ -56,11 +61,15 @@ const getAccessToken = (roomName, identity) => {
   // serialize the token and return it
   return token.toJwt();
 };
-
+//
 // Start express server
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
 });
+
+
+
+
 
 app.post("/join-room", async (req, res) => {
   if (!req.body || !req.body.roomName || !req.body.identity) {
