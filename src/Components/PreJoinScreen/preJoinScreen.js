@@ -1,77 +1,94 @@
-import { useState } from "react";
-import "./preJoinScreen.css";
-import { connect as reactConnect } from "react-redux";
-import { setRoomName } from "../../Store/Actions/callActions";
-import { setCallState } from "../../Store/Actions/callActions";
-import * as callActions from "../../Store/Actions/callActions";
-
-const { connect } = require("twilio-video");
-
-const Entry = ({ saveRoom, setCall }) => {
+import React, { useState } from "react";
+import { connect } from "twilio-video";
+import Room from "../Room/Room";
+const PreJoinScreen = () => {
+  const [username, setUsername] = useState("");
   const [roomName, setRoomName] = useState("");
-  const handleButtonPress = async (e) => {
-    e.preventDefault();
-    console.log("clicked submit");
-    console.log(roomName);
-    const req = { roomName: roomName };
+  const [room, setRoom] = useState(null);
+  const [token, setToken] = useState("");
 
-    // fetch an Access Token from the join-room route
-    const response = await fetch("http://localhost:8080/join-room", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(req),
-    });
-    const { token } = await response.json();
-    console.log(`Received token: ${token}`);
-
-    // join video room with token
-    const room = await joinVideoRoom(roomName, token);
-    setCall(callActions.callStates.CONNECTED);
-    saveRoom(room);
-    console.log(`Room is ${room}`);
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+    console.log(`Username: ${username}. roomname: ${roomName}`);
+    try {
+      console.log("Clicked submit, handling form");
+      const req = { roomName: roomName, identity: username };
+      const response = await fetch("http://localhost:8080/join-room", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(req),
+      });
+      const { token } = await response.json();
+      console.log(`Received token: ${token}`);
+      setToken(token);
+      const room = await joinVideoRoom(roomName, token);
+      console.log(`Room is :${room}`);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
-  const joinVideoRoom = async (roomName, token) => {
+  const joinVideoRoom = async (roomName, data) => {
     try {
-      const room = await connect(token, {
+      const room = await connect(data, {
         roomName: roomName,
         audio: true,
         video: true,
       });
-      saveRoom(room);
+      setRoom(room);
       return room;
     } catch (error) {
       console.log(error);
     }
   };
 
+  const returnToLobby = async () => {
+    if (room) {
+      // Detach and remove all the tracks
+      room.localParticipant.tracks.forEach((publication) => {
+        if (
+          publication.track.kind === "audio" ||
+          publication.track.kind === "video"
+        ) {
+          publication.track.stop();
+          const attachedElements = publication.track.detach();
+          attachedElements.forEach((element) => element.remove());
+        }
+      });
+
+      room.disconnect();
+      setRoom(null);
+    }
+  };
+
   return (
     <div>
-      <form>
-        <span>Room Name:</span>
-        <input
-          type="text"
-          name="roomName"
-          value={roomName}
-          onChange={(e) => {
-            setRoomName(e.target.value);
-          }}
-        />
-        <br />
-        <input type="button" value="Submit" onClick={handleButtonPress}></input>
-      </form>
+      {room === null ? (
+        <form onSubmit={handleFormSubmit}>
+          <input
+            value={username}
+            onChange={(e) => {
+              setUsername(e.target.value);
+            }}
+            placeholder="What is your name?"
+          ></input>
+          <input
+            value={roomName}
+            onChange={(e) => {
+              setRoomName(e.target.value);
+            }}
+            placeholder="Enter a room name"
+          ></input>
+          <button value="Submit" onClick={handleFormSubmit}></button>
+        </form>
+      ) : (
+        <Room returnToLobby={returnToLobby} room={room}></Room>
+      )}
     </div>
   );
 };
 
-const mapActionsToProps = (dispatch) => {
-  return {
-    saveRoom: (roomName) => dispatch(setRoomName(roomName)),
-    setCall: (callStatus) => dispatch(setCallState(callStatus)),
-  };
-};
-
-export default reactConnect(null, mapActionsToProps)(Entry);
+export default PreJoinScreen;
