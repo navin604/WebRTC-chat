@@ -28,7 +28,7 @@ const findOrCreateRoom = async (roomName) => {
       console.log("roomn doesnt so creating");
       await twilioClient.video.v1.rooms.create({
         uniqueName: roomName,
-        type: "go",
+        type: "group",
       });
     } else {
       throw error;
@@ -36,14 +36,14 @@ const findOrCreateRoom = async (roomName) => {
   }
 };
 
-const getAccessToken = (roomName) => {
+const getAccessToken = (roomName, identity) => {
   // create an access token
   const token = new AccessToken(
     process.env.TWILIO_ACCOUNT_SID,
     process.env.TWILIO_API_KEY_SID,
     process.env.TWILIO_API_KEY_SECRET,
     // generate a random unique identity for this participant
-    { identity: uuidv4() }
+    { identity: identity + "." + uuidv4() }
   );
   // create a video grant for this specific room
   const videoGrant = new VideoGrant({
@@ -52,6 +52,7 @@ const getAccessToken = (roomName) => {
 
   // add the video grant
   token.addGrant(videoGrant);
+
   // serialize the token and return it
   return token.toJwt();
 };
@@ -62,15 +63,16 @@ app.listen(PORT, () => {
 });
 
 app.post("/join-room", async (req, res) => {
-  if (!req.body || !req.body.roomName) {
+  if (!req.body || !req.body.roomName || !req.body.identity) {
     console.log("failed to joun room post");
     return res.status(400).send("Must include roomName argument.");
   }
   const roomName = req.body.roomName;
-  console.log("Correct load now creatingf or finding");
+  const identity = req.body.identity;
+  console.log("Correct load now creating for finding");
   // find or create a room with given room name
   await findOrCreateRoom(roomName);
   // Generate an access token for a participant in this room
-  const token = getAccessToken(roomName);
-  res.send({ token: token });
+  const token = getAccessToken(roomName, identity);
+  res.json({ token: token });
 });
