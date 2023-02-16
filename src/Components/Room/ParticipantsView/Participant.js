@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import "../../styles.css";
 
 const Participant = (props) => {
   const [videoTracks, setVideoTracks] = useState([]);
@@ -77,7 +78,7 @@ const Participant = (props) => {
   }, [audioTracks]);
 
   return (
-    <div className="participant">
+    <div className="person">
       <h3>{props.participant.identity.split(".")[0]}</h3>
       <video ref={videoRef} autoPlay={true} />
       <audio ref={audioRef} autoPlay={true} muted={props.muted} />
