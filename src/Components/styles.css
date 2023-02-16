@@ -1,96 +1,62 @@
-.join-page_container {
+.room_container {
+    left: 0;
+    min-height: 100%;
+    position: fixed;
+    display: flex;
+    top: 0;
     width: 100%;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.background_main_color {
-    background-color: #efeff7;
-
+    background-color: rgb(32,33,36)
 }
 
 
 
-.login-page_login_box {
-    width: 650px;
-    height: 350px;
-    border-radius: 30px;
-
-}
-
-
-.login-page_logo_container {
-    width: 80%;
-    display: flex;
-    justify-content: center;
-}
-
-.login-page_logo_image {
-    width: 200px;
-}
-
-.login-page_title_container {
-    width: 80%;
+.room_left {
+    width: 90%;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+
+}
+
+.room_right {
+    width: 10%;
+    height: 100%;
+    background-color: #61dafb;
+}
+
+.room_content {
     align-items: center;
-}
-
-.login-page_input_container {
-    width: 80%;
     display: flex;
+    height: 95%;
     justify-content: center;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+
+    background-color: rgb(32,33,36)
 }
 
-.login-page_input {
-    width: 150px;
-    border-radius: 50px;
-    height: 30px;
-    outline:none;
-    border: none;
-    font-size: 16px;
-    font-weight: 500;
-    padding: 10px 10px;
-}
 
-.login-page_button_container {
+
+.room_call_tools {
+    position: absolute;
     width: 80%;
+    height: 5%;
     display: flex;
     align-items: center;
-    justify-content: center;
+
+    bottom: 0
+}
+.localStream {
+    width: 200px;
+    height: 150px;
+    display: flex;
+    position: absolute;
+    bottom: 0;
+    z-index: 2;
+    border-radius: 10px;
+    overflow: hidden;
+
 }
 
-.login-page_button {
-    border-radius: 50px;
-    outline: none;
-    border: 1px solid #e6e5e8;
-    font-size: 16px;
-    padding: 10px 10px;
-    width: 170px;
-    transition: 0.3s;
-}
-
-.login-page_button:hover {
-    background-color: #8706f0;
-    opacity: 0.5;
-}
-
-
-::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-    color: #e6e5e8;
-    text-align: center;
-}
-::-moz-placeholder { /* Firefox 19+ */
-    color: #e6e5e8;
-    text-align: center;
-}
-:-ms-input-placeholder { /* IE 10+ */
-    color: #e6e5e8;
-    text-align: center;
-}
-:-moz-placeholder { /* Firefox 18- */
-    color: #e6e5e8;
-    text-align: center;
-}
