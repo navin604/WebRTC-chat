@@ -34,7 +34,6 @@ const PreJoinScreen = () => {
   };
 
   const joinVideoRoom = async (roomName, data) => {
-
     try {
       const room = await connect(data, {
         roomName: roomName,
@@ -70,9 +69,6 @@ const PreJoinScreen = () => {
 
   return (
     <div>
-
-
-
       {room === null ? (
         <form onSubmit={handleFormSubmit}>
           <input
