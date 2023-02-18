@@ -1,20 +1,20 @@
 import React from "react";
 import P2PListItem from "./p2pListItem";
+import { connect } from "react-redux";
 
-const testList = [
-  { roomId: "a11", hostname: "Mark" },
-  { roomId: "a33", hostname: "John" },
-  { roomId: "22", hostname: "Frank" },
-];
-
-const P2PRoomList = () => {
+const P2PRoomList = (props) => {
+  const { p2pCallRooms } = props;
   return (
     <>
-      {testList.map((item) => (
-        <P2PListItem key={item.roomId} room={item} />
+      {p2pCallRooms.map((item) => (
+        <P2PListItem key={item.roomID} room={item} />
       ))}
     </>
   );
 };
 
-export default P2PRoomList;
+const mapStateToProps = ({ dashboard }) => ({
+  ...dashboard,
+});
+
+export default connect(mapStateToProps)(P2PRoomList);
