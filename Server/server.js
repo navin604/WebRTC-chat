@@ -56,6 +56,11 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     console.log("Server: user disconnected");
+    p2pCallRooms = p2pCallRooms.filter((room) => room.socketID !== socket.id);
+    io.sockets.emit("broadcast", {
+      event: broadcastEventTypes.P2P_CALL_ROOMS,
+      p2pCallRooms,
+    });
   });
 
   //Group call listeners
@@ -86,6 +91,22 @@ io.on("connection", (socket) => {
       streamID: data.streamID,
     });
     socket.join(data.roomID);
+  });
+
+  socket.on("p2p-call-disconnect", (data) => {
+    console.log("Client disconencted");
+    socket.leave(data.roomID);
+    io.to(data.roomID).emit("p2p-call-disconnect", {
+      streamID: data.streamID,
+    });
+  });
+
+  socket.on("room-closed", (data) => {
+    p2pCallRooms = p2pCallRooms.filter((room) => room.peerID !== data.peerID);
+    io.sockets.emit("broadcast", {
+      event: broadcastEventTypes.P2P_CALL_ROOMS,
+      p2pCallRooms,
+    });
   });
 });
 
