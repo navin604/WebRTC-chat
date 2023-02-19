@@ -1,12 +1,23 @@
-import React from "react";
-import Entry from "./Components/PreJoinScreen/preJoinScreen";
+import React, { useEffect } from "react";
+import Entry from "./Components/VideoRoom/VideoRoom";
+import { connectWithServer } from "./utils/SocketClient";
+import "./App.css";
+import Login from "./Components/Login/Login";
+import { connect } from "react-redux";
 
-const App = () => {
+const App = (props) => {
+  const { username } = props;
+  useEffect(() => {
+    connectWithServer();
+  }, []);
   return (
-    <div>
-      <Entry />
+    <div className="App">
+      {username === "" && <Login />}
+      {username !== "" && <Entry />}
     </div>
   );
 };
-
-export default App;
+const mapStateToProps = ({ dashboard }) => ({
+  ...dashboard,
+});
+export default connect(mapStateToProps)(App);

@@ -6,16 +6,109 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const PORT = process.env.PORT || 8080;
+const { ExpressPeerServer } = require("peer");
+const socket = require("socket.io");
+const groupCallHandler = require("./peerCall");
 
+let peers = [];
+let p2pCallRooms = [];
 
-
-
-
+const broadcastEventTypes = {
+  ACTIVE_USERS: "ACTIVE_USERS",
+  P2P_CALL_ROOMS: "P2P_CALL_ROOMS",
+};
 
 // Use Express JSON Middleware
 app.use(express.json());
 
 app.use(cors());
+
+// Start express server
+const server = app.listen(PORT, () => {
+  console.log(`Listening on port ${PORT}`);
+});
+
+// Start peer server
+const peerServer = ExpressPeerServer(server, {
+  debug: true,
+});
+
+//Set IO socket
+const io = socket(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+  },
+});
+
+app.use("/peerjs", peerServer);
+
+groupCallHandler.createPeerServerListeners(peerServer);
+
+io.on("connection", (socket) => {
+  console.log("Server: User connected");
+  console.log(socket.id);
+  socket.emit("connection", null);
+  io.sockets.emit("broadcast", {
+    event: broadcastEventTypes.P2P_CALL_ROOMS,
+    p2pCallRooms,
+  });
+
+  socket.on("disconnect", () => {
+    console.log("Server: user disconnected");
+    p2pCallRooms = p2pCallRooms.filter((room) => room.socketID !== socket.id);
+    io.sockets.emit("broadcast", {
+      event: broadcastEventTypes.P2P_CALL_ROOMS,
+      p2pCallRooms,
+    });
+  });
+
+  //Group call listeners
+  socket.on("create-group-call", (data) => {
+    const roomID = uuidv4();
+    socket.join(roomID);
+    const p2pRoom = {
+      socketID: socket.id,
+      roomID: roomID,
+      peerID: data.peerID,
+      hostname: data.username,
+    };
+    p2pCallRooms.push(p2pRoom);
+    console.log("Created room");
+    console.log(p2pRoom);
+    console.log("Updated roomlist below");
+    console.log(p2pCallRooms);
+    io.sockets.emit("broadcast", {
+      event: broadcastEventTypes.P2P_CALL_ROOMS,
+      p2pCallRooms,
+    });
+  });
+
+  socket.on("p2p-call-join-request", (data) => {
+    console.log("Sending join request to p2p room");
+    io.to(data.roomID).emit("p2p-call-join-request", {
+      peerID: data.peerID,
+      streamID: data.streamID,
+    });
+    socket.join(data.roomID);
+  });
+
+  socket.on("p2p-call-disconnect", (data) => {
+    console.log("Client disconencted");
+    socket.leave(data.roomID);
+    io.to(data.roomID).emit("p2p-call-disconnect", {
+      streamID: data.streamID,
+    });
+  });
+
+  socket.on("room-closed", (data) => {
+    p2pCallRooms = p2pCallRooms.filter((room) => room.peerID !== data.peerID);
+    io.sockets.emit("broadcast", {
+      event: broadcastEventTypes.P2P_CALL_ROOMS,
+      p2pCallRooms,
+    });
+  });
+});
 
 // create the twilioClient
 const twilioClient = require("twilio")(
@@ -62,14 +155,6 @@ const getAccessToken = (roomName, identity) => {
   return token.toJwt();
 };
 //
-// Start express server
-app.listen(PORT, () => {
-  console.log(`Listening on port ${PORT}`);
-});
-
-
-
-
 
 app.post("/join-room", async (req, res) => {
   if (!req.body || !req.body.roomName || !req.body.identity) {

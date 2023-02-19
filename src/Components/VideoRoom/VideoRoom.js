@@ -1,13 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "twilio-video";
 import Room from "../Room/Room";
-
+import * as GroupCallHandler from "../../utils/GroupCallHandler";
+import { establishPeerConnection } from "../../utils/GroupCallHandler";
+import P2PRoomList from "../p2pRooms/p2pRoomList/p2pRoomList";
+import P2PCall from "../p2pRooms/p2pCall/p2pCall";
+import { getLocalStream } from "../../utils/GetLocalStream";
+import "./VideoRoom.css";
+import ToolBar from "./Toolbar/ToolBar";
+import Participants from "./Participants/Participants";
 const PreJoinScreen = () => {
   const [username, setUsername] = useState("");
   const [roomName, setRoomName] = useState("");
   const [room, setRoom] = useState(null);
   const [token, setToken] = useState("");
-
+  useEffect(() => {
+    GroupCallHandler.establishPeerConnection();
+    getLocalStream();
+  });
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
@@ -68,30 +78,38 @@ const PreJoinScreen = () => {
   };
 
   return (
-    <div>
-      {room === null ? (
-        <form onSubmit={handleFormSubmit}>
-          <input
-            value={username}
-            onChange={(e) => {
-              setUsername(e.target.value);
-            }}
-            placeholder="What is your name?"
-          ></input>
-          <input
-            value={roomName}
-            onChange={(e) => {
-              setRoomName(e.target.value);
-            }}
-            placeholder="Enter a room name"
-          ></input>
-          <button value="Submit" onClick={handleFormSubmit}></button>
-        </form>
-      ) : (
-        <Room returnToLobby={returnToLobby} room={room}></Room>
-      )}
+    <div className="wrapper">
+      <div className="mainScreen">
+        <Participants />
+      </div>
+      <div className="toolbar">
+        <ToolBar />
+      </div>
     </div>
   );
 };
 
 export default PreJoinScreen;
+// {/*<P2PCall />*/}
+// {/*<P2PRoomList></P2PRoomList>*/}
+// {/*{room === null ? (*/}
+// {/*  <form onSubmit={handleFormSubmit}>*/}
+// {/*    <input*/}
+// {/*      value={username}*/}
+// {/*      onChange={(e) => {*/}
+// {/*        setUsername(e.target.value);*/}
+// {/*      }}*/}
+// {/*      placeholder="What is your name?"*/}
+// {/*    ></input>*/}
+// {/*    <input*/}
+// {/*      value={roomName}*/}
+// {/*      onChange={(e) => {*/}
+// {/*        setRoomName(e.target.value);*/}
+// {/*      }}*/}
+// {/*      placeholder="Enter a room name"*/}
+// {/*    ></input>*/}
+// {/*    <button value="Submit" onClick={handleFormSubmit}></button>*/}
+// {/*  </form>*/}
+// {/*) : (*/}
+// {/*  <Room returnToLobby={returnToLobby} room={room}></Room>*/}
+// {/*)}*/}
