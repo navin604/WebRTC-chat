@@ -8,8 +8,9 @@ export const CALL_SET_CALL_STATE = "CALL.SET_CALL_STATE";
 
 export const CALL_RESET_CALL_STATE = "CALL.RESET_CALL_STATE";
 
-export const CALL_CLEAR_GROUP_CALL_DATA = "CALL.CLEAR_GROUP_CALL_DATA";
-
+export const CLEAR_P2P_CALL_DATA = "CALL.CLEAR_GROUP_CALL_DATA";
+export const SET_LOCAL_MIC_ENABLED = "CALL.SET_LOCAL_MIC_ENABLED";
+export const SET_LOCAL_CAM_ENABLED = "CALL.SET_LOCAL_CAM_ENABLED";
 export const SET_P2P_CALL_ACTIVE = "CALL.SET_P2P_CALL_ACTIVE";
 export const SET_P2P_CALL_STREAMS = "CALL.SET_GROUP_CALL_STREAMS";
 
@@ -47,8 +48,21 @@ export const setP2PCallIncomingStreams = (p2pCallStreams) => {
   };
 };
 
-export const clearGroupCallData = () => {
+export const clearP2PCallData = () => {
   return {
-    type: CALL_CLEAR_GROUP_CALL_DATA,
+    type: CLEAR_P2P_CALL_DATA,
+  };
+};
+export const setMicEnabled = (enabled) => {
+  return {
+    type: SET_LOCAL_MIC_ENABLED,
+    enabled,
+  };
+};
+
+export const setCameraEnabled = (enabled) => {
+  return {
+    type: SET_LOCAL_CAM_ENABLED,
+    enabled,
   };
 };

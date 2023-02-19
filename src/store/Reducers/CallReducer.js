@@ -2,9 +2,11 @@ import * as callActions from "../Actions/CallActions";
 
 const initState = {
   localStream: null,
-  callState: callActions.callStatus.CALL_UNAVAILABLE,
+  callState: callActions.callStatus.CALL_AVAILABLE,
   p2pCallActive: false,
   p2pCallStreams: [],
+  cameraEnabled: true,
+  microphoneEnabled: true,
 };
 
 const reducer = (state = initState, action) => {
@@ -23,11 +25,8 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         remoteStream: null,
-        screenSharingActive: false,
-        callerUsername: "",
-        localMicrophoneEnabled: true,
-        localCameraEnabled: true,
-        callingDialogVisible: false,
+        microphoneEnabled: true,
+        cameraEnabled: true,
       };
     case callActions.SET_P2P_CALL_ACTIVE:
       return {
@@ -39,14 +38,24 @@ const reducer = (state = initState, action) => {
         ...state,
         p2pCallStreams: action.p2pCallStreams,
       };
-    case callActions.CALL_CLEAR_GROUP_CALL_DATA:
+    case callActions.CLEAR_P2P_CALL_DATA:
       return {
         ...state,
         p2pCallActive: false,
         p2pCallStreams: [],
         callState: callActions.callStatus.CALL_AVAILABLE,
-        localMicrophoneEnabled: true,
-        localCameraEnabled: true,
+        microphoneEnabled: true,
+        cameraEnabled: true,
+      };
+    case callActions.SET_LOCAL_CAM_ENABLED:
+      return {
+        ...state,
+        cameraEnabled: action.enabled,
+      };
+    case callActions.SET_LOCAL_MIC_ENABLED:
+      return {
+        ...state,
+        microphoneEnabled: action.enabled,
       };
 
     default:

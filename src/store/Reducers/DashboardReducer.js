@@ -1,7 +1,7 @@
 import * as dashboardActions from "../Actions/DashboardActions";
 
 const initState = {
-  username: "john",
+  username: "",
   p2pCallRooms: [],
 };
 
