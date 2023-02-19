@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Participant from "./ParticipantsView/Participant";
-import LocalParticipant from "./ParticipantsView/localParticipant";
+
 
 import initLayoutContainer from "opentok-layout-js";
 const Room = ({ returnToLobby, room }) => {
