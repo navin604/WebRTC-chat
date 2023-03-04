@@ -1,38 +1,41 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { setUsername } from "../../store/Actions/DashboardActions";
-import Button from "@mui/material/Button";
 import "./Login.css";
-import { TextField } from "@mui/material";
-import { height } from "@mui/system";
+import ErrorPrompt from "./ErrorPrompt/ErrorPrompt";
 
 const Login = ({ saveUsername }) => {
   const [username, setUsername] = useState("");
+  const [error, setErrorStatus] = useState(false);
 
   const handleLogin = () => {
+    if (username === "") {
+      setErrorStatus(true);
+    }
     console.log("got username, should go to main page");
     saveUsername(username);
   };
 
   return (
-    <div className="login_screen">
-      <TextField
-        id="outlined-basic"
-        size="small"
-        label={username === "" ? "Username" : ""}
-        onFocus={(e) => (e.target.placeholder = "")}
-        variant="outlined"
-        value={username}
-        className="login_text"
-        onChange={(event) => setUsername(event.target.value)}
-      />
-      <Button
-        variant="contained"
-        className="login_button"
-        onClick={handleLogin}
-      >
-        Start talking!
-      </Button>
+    <div className="wrapper">
+      <div className="login_prompt">
+        <h1>Enter a name</h1>
+        <br />
+        <br />
+        <span className="subtitle">USERNAME:</span>
+        <input
+          type="text"
+          name="username"
+          value={username}
+          className="login_text"
+          onChange={(event) => setUsername(event.target.value)}
+        />
+        {error && <ErrorPrompt setErrorStatus={setErrorStatus} />}
+        <br />
+        <button className="login-button" value="SUBMIT" onClick={handleLogin}>
+          SUBMIT
+        </button>
+      </div>
     </div>
   );
 };
