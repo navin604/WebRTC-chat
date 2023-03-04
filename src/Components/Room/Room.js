@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from "react";
 
 
-import initLayoutContainer from "opentok-layout-js";
+
 const Room = ({ returnToLobby, room }) => {
   const [remoteParticipants, setRemoteParticipants] = useState(
     Array.from(room.participants.values())
   );
-  //New participants will be appended to this div
+
   let layoutEl = null;
-  //Layout settings
-  let layout;
-  let ratios = [4 / 3, 3 / 4, 16 / 9];
 
   useEffect(() => {
     //addParticipant(room.localParticipant);
@@ -28,46 +25,12 @@ const Room = ({ returnToLobby, room }) => {
   }, [room]);
 
   const addParticipant = (participant) => {
-    function updateLayoutValues() {
-      layoutEl = document.getElementById("layout");
-      layout = initLayoutContainer(layoutEl, {
-        maxRatio: 3 / 2,
-        minRatio: 9 / 16,
-        fixedRatio: false,
-        alignItems: "center",
-        bigPercentage: 0.8,
-        bigFixedRatio: false,
-        bigMaxRatio: 3 / 2,
-        bigMinRatio: 9 / 16,
-        bigFirst: true,
-        smallMaxWidth: "Infinity",
-        smallMaxHeight: "Infinity",
-        bigMaxWidth: "Infinity",
-        bigMaxHeight: "Infinity",
-        bigAlignItems: "center",
-        smallAlignItems: "center",
-      }).layout;
-    }
-    updateLayoutValues();
+    layoutEl = document.getElementById("layout");
     console.log(`${participant} connected!`);
     let participantEl = document.createElement("div");
     participantEl.setAttribute("id", participant.identity);
-    participantEl.videoHeight = 480;
-    // Pick a random ratio
-    var ratio = ratios[Math.round(Math.random() * (ratios.length - 1))];
-    participantEl.videoWidth = 480 * ratio;
-
-    participantEl.addEventListener("dblclick", function () {
-      if (participantEl.classList.contains("OT_big")) {
-        participantEl.classList.remove("OT_big");
-      } else {
-        participantEl.classList.add("OT_big");
-      }
-      layout();
-    });
-
     layoutEl.appendChild(participantEl);
-    layout();
+
     participant.tracks.forEach((trackPublication) => {
       console.log(trackPublication);
       handleTrackPublication(trackPublication, participant);
@@ -76,6 +39,13 @@ const Room = ({ returnToLobby, room }) => {
     // listen for any new track publications
     participant.on("trackPublished", handleTrackPublication);
   };
+  const removeParticipant = (participant) => {
+    console.log(`${participant} disconnected!`);
+    setRemoteParticipants((prevParticipants) =>
+        prevParticipants.filter((p) => p.identity !== participant.identity)
+    );
+  };
+
 
   const handleTrackPublication = (trackPublication, participant) => {
     function displayTrack(track) {
@@ -96,27 +66,6 @@ const Room = ({ returnToLobby, room }) => {
     trackPublication.on("subscribed", displayTrack);
   };
 
-  const removeParticipant = (participant) => {
-    console.log(`${participant} disconnected!`);
-  };
-
-  //
-  // function removeElement() {
-  //   layoutEl.firstChild.classList.remove('ot-layout');
-  //   setTimeout(function() {
-  //     layoutEl.removeChild(layoutEl.firstChild);
-  //     layout();
-  //   }, 200);
-  // }
-  //
-  // var resizeTimeout;
-  // window.onresize = function() {
-  //   clearTimeout(resizeTimeout);
-  //   resizeTimeout = setTimeout(function () {
-  //     layout();
-  //   }, 20);
-  // };
-  //
 
   return (
     <div className="room_container">
@@ -127,5 +76,3 @@ const Room = ({ returnToLobby, room }) => {
 };
 
 export default Room;
-
-// Whenever the room changes, set up listeners

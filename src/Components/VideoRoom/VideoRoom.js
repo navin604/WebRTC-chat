@@ -17,7 +17,7 @@ const PreJoinScreen = () => {
   useEffect(() => {
     GroupCallHandler.establishPeerConnection();
     getLocalStream();
-  });
+  },[]);
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
@@ -79,12 +79,34 @@ const PreJoinScreen = () => {
 
   return (
     <div className="wrapper">
-      <div className="mainScreen">
-        <Participants />
-      </div>
-      <div className="toolbar">
-        <ToolBar />
-      </div>
+      {room === null ? (
+        <form onSubmit={handleFormSubmit}>
+          <input
+            value={username}
+            onChange={(e) => {
+              setUsername(e.target.value);
+            }}
+            placeholder="What is your name?"
+          ></input>
+          <input
+            value={roomName}
+            onChange={(e) => {
+              setRoomName(e.target.value);
+            }}
+            placeholder="Enter a room name"
+          ></input>
+          <button value="Submit" onClick={handleFormSubmit}></button>
+        </form>
+      ) : (
+        <Room returnToLobby={returnToLobby} room={room}></Room>
+      )}
+
+      {/*<div className="mainScreen">*/}
+      {/*  <Participants />*/}
+      {/*</div>*/}
+      {/*<div className="toolbar">*/}
+      {/*  <ToolBar />*/}
+      {/*</div>*/}
     </div>
   );
 };
@@ -92,24 +114,4 @@ const PreJoinScreen = () => {
 export default PreJoinScreen;
 // {/*<P2PCall />*/}
 // {/*<P2PRoomList></P2PRoomList>*/}
-// {/*{room === null ? (*/}
-// {/*  <form onSubmit={handleFormSubmit}>*/}
-// {/*    <input*/}
-// {/*      value={username}*/}
-// {/*      onChange={(e) => {*/}
-// {/*        setUsername(e.target.value);*/}
-// {/*      }}*/}
-// {/*      placeholder="What is your name?"*/}
-// {/*    ></input>*/}
-// {/*    <input*/}
-// {/*      value={roomName}*/}
-// {/*      onChange={(e) => {*/}
-// {/*        setRoomName(e.target.value);*/}
-// {/*      }}*/}
-// {/*      placeholder="Enter a room name"*/}
-// {/*    ></input>*/}
-// {/*    <button value="Submit" onClick={handleFormSubmit}></button>*/}
-// {/*  </form>*/}
-// {/*) : (*/}
-// {/*  <Room returnToLobby={returnToLobby} room={room}></Room>*/}
-// {/*)}*/}
+
