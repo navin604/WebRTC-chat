@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-
+import Participant from "./participant";
+import "./Room.css"
 
 
 const Room = ({ returnToLobby, room }) => {
@@ -7,11 +8,18 @@ const Room = ({ returnToLobby, room }) => {
     Array.from(room.participants.values())
   );
 
-  let layoutEl = null;
+  let gridCol =
+      remoteParticipants.length === 1 ? 1 : remoteParticipants.length <= 4 ? 2 : 4;
+  const gridColSize = remoteParticipants.length <= 4 ? 1 : 2;
+  let gridRowSize =
+      remoteParticipants.length <= 4
+          ? remoteParticipants.length
+          : Math.ceil(remoteParticipants.length / 2);
+
+
 
   useEffect(() => {
     //addParticipant(room.localParticipant);
-    room.participants.forEach(addParticipant);
     room.on("participantConnected", (participant) =>
       addParticipant(participant)
     );
@@ -25,19 +33,10 @@ const Room = ({ returnToLobby, room }) => {
   }, [room]);
 
   const addParticipant = (participant) => {
-    layoutEl = document.getElementById("layout");
     console.log(`${participant} connected!`);
-    let participantEl = document.createElement("div");
-    participantEl.setAttribute("id", participant.identity);
-    layoutEl.appendChild(participantEl);
+    setRemoteParticipants((prevParticipants) => [...prevParticipants, participant])
 
-    participant.tracks.forEach((trackPublication) => {
-      console.log(trackPublication);
-      handleTrackPublication(trackPublication, participant);
-    });
 
-    // listen for any new track publications
-    participant.on("trackPublished", handleTrackPublication);
   };
   const removeParticipant = (participant) => {
     console.log(`${participant} disconnected!`);
@@ -47,31 +46,21 @@ const Room = ({ returnToLobby, room }) => {
   };
 
 
-  const handleTrackPublication = (trackPublication, participant) => {
-    function displayTrack(track) {
-      // append this track to the participant's div and render it on the page
-      const participantEl = document.getElementById(participant.identity);
-      // track.attach creates an HTMLVideoElement or HTMLAudioElement
-      // (depending on the type of track) and adds the video or audio stream
-      participantEl.append(track.attach());
-    }
-
-    // check if the trackPublication contains a `track` attribute. If it does,
-    // we are subscribed to this track. If not, we are not subscribed.
-    if (trackPublication.track) {
-      displayTrack(trackPublication.track);
-    }
-
-    // listen for any new subscriptions to this track publication
-    trackPublication.on("subscribed", displayTrack);
-  };
-
 
   return (
-    <div className="room_container">
-      <div id="layout"></div>
-      <button onClick={returnToLobby}>Leave Call</button>
-    </div>
+      <div  style={{
+        "--grid-size": gridCol,
+        "--grid-col-size": gridColSize,
+        "--grid-row-size": gridRowSize,
+      }} className="participants">
+        {remoteParticipants.map((participant) => (
+          <Participant
+            key={participant.identity}
+            participant={participant}
+            muted={false}
+          />
+        ))}
+      </div>
   );
 };
 

@@ -98,7 +98,17 @@ const PreJoinScreen = () => {
           <button value="Submit" onClick={handleFormSubmit}></button>
         </form>
       ) : (
-        <Room returnToLobby={returnToLobby} room={room}></Room>
+          <>
+            <div className="mainScreen">
+          <Room returnToLobby={returnToLobby} room={room}></Room>
+            </div>
+          <div className="toolbar">
+            <button onClick={returnToLobby}></button>
+          </div>
+
+
+
+        </>
       )}
 
       {/*<div className="mainScreen">*/}
