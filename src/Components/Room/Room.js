@@ -7,7 +7,7 @@ const Room = ({ returnToLobby, room }) => {
   const [remoteParticipants, setRemoteParticipants] = useState(
     Array.from(room.participants.values())
   );
-
+s
   let gridCol =
       remoteParticipants.length === 1 ? 1 : remoteParticipants.length <= 4 ? 2 : 4;
   const gridColSize = remoteParticipants.length <= 4 ? 1 : 2;
