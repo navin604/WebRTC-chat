@@ -5,7 +5,7 @@ import {
   faPhoneSlash,
   faVideo,
 } from "@fortawesome/free-solid-svg-icons";
-import "./ToolBar.css";
+import "./Toolbar.css";
 
 const ToolBar = () => {
   return (
