@@ -1,5 +1,33 @@
-# WebRTC Chat
-## Easy to use chat application for quick meetings
+# COMP 8047 - Major project
 
-This application is a work in progress. When completed, the application will offer users the ability to
-create or join chat rooms. Peer-to-peer rooms will support up to 3 users while the client-server rooms will allow up to 50.
+## What is it
+
+This application is a multi-party video application built with [Twilio's Programmable Video JS SDK](https://github.com/twilio/twilio-video.js) and PeerJS
+
+
+
+
+### Configure .env
+
+Create a .env file  in the server directory and enter your credentials:
+
+```
+TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+TWILIO_API_KEY_SID=SKxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+TWILIO_API_KEY_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+TWILIO_CONVERSATIONS_SERVICE_SID=ISxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+```
+
+## Install Dependencies
+
+Run `npm install` inside the main project folder to install all dependencies from NPM.
+
+Run `npm install` inside the server folder.
+
+
+### Running the App locally
+
+Run the app locally with
+
+    npm start
