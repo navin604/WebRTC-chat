@@ -29,7 +29,7 @@ const Participants = ({ returnToLobby, roomName }) => {
     );
     window.addEventListener("pagehide", returnToLobby);
     window.addEventListener("beforeunload", returnToLobby);
-  }, [roomName]);
+  }, [roomName, returnToLobby]);
 
   const addParticipant = (participant) => {
     console.log(`${participant} connected!`);

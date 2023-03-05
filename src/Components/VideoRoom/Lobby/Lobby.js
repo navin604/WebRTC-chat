@@ -43,6 +43,7 @@ const Lobby = ({ username, setRoomName }) => {
       console.log(`error on connect`);
       console.log(error);
     }
+    console.log(token)
   };
 
   return (
