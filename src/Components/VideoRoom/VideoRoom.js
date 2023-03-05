@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import "./VideoRoom.css";
 import { callStatus } from "../../store/Actions/CallActions";
 import Participants from "./Participants/Participants";
-import ToolBar from "./Toolbar/Toolbar";
+import ToolBar from "./Toolbar/ToolBar"
 import Lobby from "./Lobby/Lobby";
 import { connect } from "react-redux";
 import { setRoom } from "../../store/Actions/DashboardActions";

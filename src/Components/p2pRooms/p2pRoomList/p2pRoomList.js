@@ -3,9 +3,9 @@ import P2PListItem from "./p2pListItem";
 import { connect } from "react-redux";
 import "./p2pRoomList.css"
 import P2PRoomButton from "../p2pRoomButton/p2pRoomButton";
-import P2PRoom from "../p2pRoom";
+// import P2PRoom from "../p2pRoom";
 import * as p2pCallHandler from "../../../utils/GroupCallHandler";
-import Participants from "../../VideoRoom/Participants/Participants";
+// import Participants from "../../VideoRoom/Participants/Participants";
 import { callStatus } from "../../../store/Actions/CallActions"
 
 const P2PRoomList = (props) => {

@@ -1,5 +1,4 @@
 import * as dashboardActions from "../Actions/DashboardActions";
-import { DASHBOARD_SET_ROOM } from "../Actions/DashboardActions";
 
 const initState = {
   username: "",
