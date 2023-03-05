@@ -58,6 +58,8 @@ export const joinP2PCall = (hostID, roomID) => {
     roomID,
     localStreamID: localStream.id,
   });
+  store.dispatch(setP2PCallActive(true));
+  store.dispatch(setCallState(callStatus.CALL_UNAVAILABLE));
 };
 
 export const connectToNewUser = (data) => {
