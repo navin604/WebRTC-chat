@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
-import Entry from "./Components/VideoRoom/VideoRoom";
 import { connectWithServer } from "./utils/SocketClient";
 import "./App.css";
 import Login from "./Components/Login/Login";
 import { connect } from "react-redux";
+import VideoRoom from "./Components/VideoRoom/VideoRoom";
 
 const App = (props) => {
   const { username } = props;
@@ -13,7 +13,7 @@ const App = (props) => {
   return (
     <div className="App">
       {username === "" && <Login />}
-      {username !== "" && <Entry />}
+      {username !== "" && <VideoRoom />}
     </div>
   );
 };

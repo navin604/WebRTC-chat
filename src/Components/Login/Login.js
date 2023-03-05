@@ -17,8 +17,8 @@ const Login = ({ saveUsername }) => {
   };
 
   return (
-    <div className="wrapper">
-      <div className="login_prompt">
+    <div className="login-wrapper">
+      <div className="login-prompt">
         <h1>Enter a name</h1>
         <br />
         <br />

@@ -1,67 +1,28 @@
-import React, { useState, useEffect } from "react";
-import { connect } from "twilio-video";
-import Room from "../Room/Room";
-import * as GroupCallHandler from "../../utils/GroupCallHandler";
-import { establishPeerConnection } from "../../utils/GroupCallHandler";
-import P2PRoomList from "../p2pRooms/p2pRoomList/p2pRoomList";
-import P2PCall from "../p2pRooms/p2pCall/p2pCall";
-import { getLocalStream } from "../../utils/GetLocalStream";
+import React, { useEffect } from "react";
 import "./VideoRoom.css";
-import ToolBar from "./Toolbar/ToolBar";
+import { callStatus } from "../../store/Actions/CallActions";
 import Participants from "./Participants/Participants";
-const PreJoinScreen = () => {
-  const [username, setUsername] = useState("");
-  const [roomName, setRoomName] = useState("");
-  const [room, setRoom] = useState(null);
-  const [token, setToken] = useState("");
+import ToolBar from "./Toolbar/Toolbar";
+import Lobby from "./Lobby/Lobby";
+import { connect } from "react-redux";
+import { setRoom } from "../../store/Actions/DashboardActions";
+import P2PRoomList from "../p2pRooms/p2pRoomList/p2pRoomList";
+import * as GroupCallHandler from "../../utils/GroupCallHandler";
+import { getLocalStream } from "../../utils/GetLocalStream";
+
+const VideoRoom = (props) => {
+  const { roomName, callState, setRoomName } = props;
+
   useEffect(() => {
     GroupCallHandler.establishPeerConnection();
     getLocalStream();
-  },[]);
-  const handleFormSubmit = async (event) => {
-    event.preventDefault();
+  }, []);
 
-    console.log(`Username: ${username}. roomname: ${roomName}`);
-    try {
-      console.log("Clicked submit, handling form");
-      const req = { roomName: roomName, identity: username };
-      const response = await fetch("http://localhost:7000/join-room", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(req),
-      });
-      const { token } = await response.json();
-      console.log(`Received token: ${token}`);
-      setToken(token);
-      const room = await joinVideoRoom(roomName, token);
-      console.log(`Room is :${room}`);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const joinVideoRoom = async (roomName, data) => {
-    try {
-      const room = await connect(data, {
-        roomName: roomName,
-        audio: true,
-        video: true,
-      });
-      setRoom(room);
-      return room;
-    } catch (error) {
-      console.log(`error on connect`);
-      console.log(error);
-    }
-  };
 
   const returnToLobby = async () => {
-    if (room) {
+    if (roomName) {
       // Detach and remove all the tracks
-      room.localParticipant.tracks.forEach((publication) => {
+      roomName.localParticipant.tracks.forEach((publication) => {
         if (
           publication.track.kind === "audio" ||
           publication.track.kind === "video"
@@ -72,56 +33,39 @@ const PreJoinScreen = () => {
         }
       });
 
-      room.disconnect();
-      setRoom(null);
+      roomName.disconnect();
+      setRoomName(null);
     }
   };
 
   return (
     <div className="wrapper">
-      {room === null ? (
-        <form onSubmit={handleFormSubmit}>
-          <input
-            value={username}
-            onChange={(e) => {
-              setUsername(e.target.value);
-            }}
-            placeholder="What is your name?"
-          ></input>
-          <input
-            value={roomName}
-            onChange={(e) => {
-              setRoomName(e.target.value);
-            }}
-            placeholder="Enter a room name"
-          ></input>
-          <button value="Submit" onClick={handleFormSubmit}></button>
-        </form>
-      ) : (
-          <>
-            <div className="mainScreen">
-          <Room returnToLobby={returnToLobby} room={room}></Room>
-            </div>
-          <div className="toolbar">
-            <button onClick={returnToLobby}></button>
-          </div>
-
-
-
-        </>
-      )}
-
-      {/*<div className="mainScreen">*/}
-      {/*  <Participants />*/}
-      {/*</div>*/}
-      {/*<div className="toolbar">*/}
-      {/*  <ToolBar />*/}
-      {/*</div>*/}
+      <div className="mainScreen">
+        {roomName === null && callState === callStatus.CALL_AVAILABLE && (
+          <Lobby />
+        )}
+        {callState === callStatus.CALL_UNAVAILABLE && <></>}
+        {roomName !== null && (
+          <Participants returnToLobby={returnToLobby} roomName={roomName} />
+        )}
+      </div>
+      <div className="roomList"><P2PRoomList/></div>
+      <div className="toolbar">
+        <ToolBar roomName={roomName} />
+      </div>
     </div>
   );
 };
 
-export default PreJoinScreen;
-// {/*<P2PCall />*/}
-// {/*<P2PRoomList></P2PRoomList>*/}
+const mapStateToProps = ({ dashboard, call }) => ({
+  ...dashboard,
+  ...call,
+});
 
+const mapActionsToProps = (dispatch) => {
+  return {
+    setRoomName: (roomName) => dispatch(setRoom(roomName)),
+  };
+};
+
+export default connect(mapStateToProps, mapActionsToProps)(VideoRoom);
