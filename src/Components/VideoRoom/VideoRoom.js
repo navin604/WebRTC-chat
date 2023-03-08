@@ -65,28 +65,39 @@ const VideoRoom = (props) => {
     }
   };
 
+  const callAudioAction = () => {
+    const mic = microphoneEnabled;
+    setMic(!mic);
+    return mic;
+  };
+  const callVideoAction = () => {
+    const camera = cameraEnabled;
+    setCam(!camera);
+    return camera;
+  };
+
   const handleAudioToggle = () => {
     if (roomName) {
       //Twilio toggle audio
       console.log("Twilio toggle audio");
+      callAudioAction();
     } else {
       //leave p2p room
       console.log("Toggle p2p audio");
-      const mic = microphoneEnabled;
+      const mic = callAudioAction();
       localStream.getAudioTracks()[0].enabled = !mic;
-      setMic(!mic);
     }
   };
   const handleVideoToggle = () => {
     if (roomName) {
       //Twilio toggle video
       console.log("Twilio toggle video");
+      callVideoAction();
     } else {
       //leave p2p room
       console.log("Toggle p2p video");
-      const camera = cameraEnabled;
+      const camera = callVideoAction();
       localStream.getVideoTracks()[0].enabled = !camera;
-      setCam(!camera);
     }
   };
 
