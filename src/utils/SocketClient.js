@@ -39,7 +39,7 @@ export const handleBroadcast = (data) => {
       const p2pCallRooms = data.p2pCallRooms.filter(
         (room) => room.socketID !== socket.id
       );
-      const activeP2PCallID = GroupCallHandler.clearCalls();
+      const activeP2PCallID = GroupCallHandler.getCalls();
       if (activeP2PCallID) {
         const room = p2pCallRooms.find(
           (room) => room.roomID === activeP2PCallID
