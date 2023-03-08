@@ -3,7 +3,7 @@ import { connect } from "twilio-video";
 import { connect as connectRedux } from "react-redux";
 import { setRoom } from "../../../store/Actions/DashboardActions";
 import "./Lobby.css";
-const Lobby = ({ username, setRoomName }) => {
+const Lobby = ({ username, setRoomName, cameraEnabled, microphoneEnabled }) => {
   const [roomName, setRoomNameState] = useState("");
   const [token, setToken] = useState("");
 
@@ -34,8 +34,8 @@ const Lobby = ({ username, setRoomName }) => {
     try {
       const room = await connect(data, {
         roomName: roomName,
-        audio: true,
-        video: true,
+        audio: microphoneEnabled,
+        video: cameraEnabled,
       });
       setRoomName(room);
       return room;
@@ -43,7 +43,7 @@ const Lobby = ({ username, setRoomName }) => {
       console.log(`error on connect`);
       console.log(error);
     }
-    console.log(token)
+    console.log(token);
   };
 
   return (
