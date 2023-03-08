@@ -111,7 +111,7 @@ export const removeStream = (data) => {
   store.dispatch(setP2PCallIncomingStreams(p2pCallStreams));
 };
 
-export const clearCalls = () => {
+export const getCalls = () => {
   if (store.getState().call.p2pCallActive) {
     return callRoomID;
   } else {
