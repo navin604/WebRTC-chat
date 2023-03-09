@@ -40,12 +40,8 @@ const ToolBar = (props) => {
         />
       </div>
 
-      <div className="toolbar_icon disconnect">
-        <FontAwesomeIcon
-          icon={faPhoneSlash}
-          title="Disconnect"
-          onClick={handleDisconnect}
-        />
+      <div className="toolbar_icon disconnect" onClick={handleDisconnect}>
+        <FontAwesomeIcon icon={faPhoneSlash} title="Disconnect" />
       </div>
     </div>
   );
