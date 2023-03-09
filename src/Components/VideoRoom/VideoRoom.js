@@ -80,6 +80,7 @@ const VideoRoom = (props) => {
     if (roomName) {
       //Twilio toggle audio
       console.log("Twilio toggle audio");
+      twilioAudioTrackEditor();
       callAudioAction();
     } else {
       //leave p2p room
@@ -92,12 +93,38 @@ const VideoRoom = (props) => {
     if (roomName) {
       //Twilio toggle video
       console.log("Twilio toggle video");
+      twilioVideoTrackEditor();
       callVideoAction();
     } else {
       //leave p2p room
       console.log("Toggle p2p video");
       const camera = callVideoAction();
       localStream.getVideoTracks()[0].enabled = !camera;
+    }
+  };
+
+  const twilioVideoTrackEditor = () => {
+    if (!cameraEnabled) {
+      console.log("Enabling Twilio Video");
+      roomName.localParticipant.videoTracks.forEach((publication) => {
+        publication.track.enable();
+      });
+    } else {
+      roomName.localParticipant.videoTracks.forEach((publication) => {
+        publication.track.disable();
+      });
+    }
+  };
+  const twilioAudioTrackEditor = () => {
+    if (!microphoneEnabled) {
+      console.log("Enabling Twilio Audio");
+      roomName.localParticipant.audioTracks.forEach((publication) => {
+        publication.track.enable();
+      });
+    } else {
+      roomName.localParticipant.audioTracks.forEach((publication) => {
+        publication.track.disable();
+      });
     }
   };
 
