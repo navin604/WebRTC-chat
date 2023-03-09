@@ -36,7 +36,16 @@
     left: 20px;
     position: absolute;
 }
-
+.muted {
+    color: #fff;
+    right: 10px;
+    position: absolute;
+    top: 10px;
+    background: #353b48;
+    border-radius: 50%;
+    height: 22px;
+    width: 22px!important;
+}
 
 
 
