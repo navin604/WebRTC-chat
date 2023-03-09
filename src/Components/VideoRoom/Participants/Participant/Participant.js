@@ -1,10 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import Card from "../../Card/Card";
 import "./Participant.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMicrophoneSlash } from "@fortawesome/free-solid-svg-icons";
 
-const Participant = ({ participant }) => {
+const Participant = ({ participant, muted }) => {
   const [videoTracks, setVideoTracks] = useState([]);
   const [audioTracks, setAudioTracks] = useState([]);
+  const [videoStatus, setVideoStatus] = useState(true);
+  const [audioStatus, setAudioStatus] = useState(true);
   const videoRef = useRef();
   const audioRef = useRef();
 
@@ -46,6 +50,17 @@ const Participant = ({ participant }) => {
     const videoTrack = videoTracks[0];
     if (videoTrack) {
       videoTrack.attach(videoRef.current);
+      videoTrack.on("disabled", () => {
+        // do something with the UI here
+        console.log("disabled");
+        setVideoStatus(false);
+      });
+      videoTrack.on("enabled", () => {
+        // do something with the UI here
+        console.log("enabled");
+        setVideoStatus(true);
+      });
+
       return () => {
         videoTrack.detach();
       };
@@ -55,18 +70,51 @@ const Participant = ({ participant }) => {
     const audioTrack = audioTracks[0];
     if (audioTrack) {
       audioTrack.attach(audioRef.current);
+      audioTrack.on("disabled", () => {
+        // do something with the UI here
+        console.log("disabled");
+        setAudioStatus(false);
+      });
+      audioTrack.on("enabled", () => {
+        // do something with the UI here
+        console.log("enabled");
+        setAudioStatus(true);
+      });
       return () => {
         audioTrack.detach();
       };
     }
   }, [audioTracks]);
 
-
   return (
     <div className="participant">
       <Card>
         <video ref={videoRef} className="video" autoPlay playsInline></video>
-        <audio ref={audioRef} autoPlay={true} muted={true} />
+        <audio ref={audioRef} autoPlay={true} muted={muted} />
+        {!audioStatus && (
+          <FontAwesomeIcon
+            className="muted"
+            icon={faMicrophoneSlash}
+            title="Muted"
+          />
+        )}
+        {!videoStatus && (
+          <div
+            style={{
+              background:
+                "rgb(" +
+                Math.floor(Math.random() * 255) +
+                "," +
+                Math.floor(Math.random() * 255) +
+                "," +
+                Math.floor(Math.random() * 255) +
+                ")",
+            }}
+            className="avatar"
+          >
+            {participant.identity.split(".")[0][0]}
+          </div>
+        )}
         <div className="name">{participant.identity.split(".")[0]}</div>
       </Card>
     </div>
