@@ -3,6 +3,7 @@ import { connect } from "twilio-video";
 import { connect as connectRedux } from "react-redux";
 import { setRoom } from "../../../store/Actions/DashboardActions";
 import "./Lobby.css";
+import debounce from "lodash.debounce";
 const Lobby = ({ username, setRoomName }) => {
   const [roomName, setRoomNameState] = useState("");
   const [token, setToken] = useState("");
@@ -29,7 +30,7 @@ const Lobby = ({ username, setRoomName }) => {
       console.log(err);
     }
   };
-
+  const onClick = debounce(handleFormSubmit, 300, true);
   const joinVideoRoom = async (roomName, data) => {
     try {
       const room = await connect(data, {
@@ -64,11 +65,7 @@ const Lobby = ({ username, setRoomName }) => {
             }}
             placeholder="Enter a room name"
           ></input>
-          <button
-            className="lobby-button"
-            value="Submit"
-            onClick={handleFormSubmit}
-          >
+          <button className="lobby-button" value="Submit" onClick={onClick}>
             Submit
           </button>
         </div>
