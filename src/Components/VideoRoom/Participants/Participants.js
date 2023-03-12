@@ -8,14 +8,16 @@ const Participants = ({ returnToLobby, roomName }) => {
   );
 
   let gridCol =
-    remoteParticipants.length === 1 ? 1 : remoteParticipants.length <= 4 ? 2 : 4;
+    remoteParticipants.length === 1
+      ? 1
+      : remoteParticipants.length <= 4
+      ? 2
+      : 4;
   const gridColSize = remoteParticipants.length <= 4 ? 1 : 2;
   let gridRowSize =
     remoteParticipants.length <= 4
       ? remoteParticipants.length
       : Math.ceil(remoteParticipants.length / 2);
-
-
 
   useEffect(() => {
     //addParticipant(room.localParticipant);
@@ -33,9 +35,10 @@ const Participants = ({ returnToLobby, roomName }) => {
 
   const addParticipant = (participant) => {
     console.log(`${participant} connected!`);
-    setRemoteParticipants((prevParticipants) => [...prevParticipants, participant])
-
-
+    setRemoteParticipants((prevParticipants) => [
+      ...prevParticipants,
+      participant,
+    ]);
   };
   const removeParticipant = (participant) => {
     console.log(`${participant} disconnected!`);
@@ -45,11 +48,14 @@ const Participants = ({ returnToLobby, roomName }) => {
   };
 
   return (
-    <div  style={{
-      "--grid-size": gridCol,
-      "--grid-col-size": gridColSize,
-      "--grid-row-size": gridRowSize,
-    }} className="participants">
+    <div
+      style={{
+        "--grid-size": gridCol,
+        "--grid-col-size": gridColSize,
+        "--grid-row-size": gridRowSize,
+      }}
+      className="participants"
+    >
       {remoteParticipants.map((participant) => (
         <Participant
           key={participant.identity}
