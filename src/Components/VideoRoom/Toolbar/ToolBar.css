@@ -32,3 +32,13 @@
     box-shadow: inset 0 0 100px 100px rgba(255, 255, 255, 0.1);
 
 }
+
+.room-type {
+    position: absolute;
+    left: 10px;
+    border: solid #121212;
+    padding-left: 25px;
+    padding-right: 25px;
+
+
+}

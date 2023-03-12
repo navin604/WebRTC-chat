@@ -1,4 +1,5 @@
 import React from "react";
+import * as callActions from "../../../store/Actions/CallActions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faMicrophone,
@@ -17,9 +18,23 @@ const ToolBar = (props) => {
     handleDisconnect,
     handleVideoToggle,
     handleAudioToggle,
+    roomName,
+    callState,
   } = props;
   return (
     <div className="toolbar_items">
+      {roomName !== null ? (
+        <div className="room-type">
+          <p>Twilio Media</p>
+        </div>
+      ) : (
+        callState === callActions.callStatus.CALL_UNAVAILABLE && (
+          <div className="room-type">
+            <p>P2P Call</p>
+          </div>
+        )
+      )}
+
       <div
         className={"toolbar_icon " + (!microphoneEnabled ? "disable" : "")}
         onClick={handleAudioToggle}
