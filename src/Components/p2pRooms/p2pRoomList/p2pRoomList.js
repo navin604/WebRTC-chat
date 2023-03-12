@@ -6,6 +6,7 @@ import P2PRoomButton from "../p2pRoomButton/p2pRoomButton";
 import * as p2pCallHandler from "../../../utils/GroupCallHandler";
 import LocalVideo from "../localvideo/LocalVideo";
 import { callStatus } from "../../../store/Actions/CallActions";
+import LocalParticipant from "../../VideoRoom/LocalParticipant/LocalParticipant";
 
 const P2PRoomList = (props) => {
   const { p2pCallRooms, roomName, callState, localStream } = props;
@@ -29,6 +30,9 @@ const P2PRoomList = (props) => {
       </div>
       {callState === callStatus.CALL_UNAVAILABLE && (
         <LocalVideo localStream={localStream} />
+      )}
+      {roomName !== null && (
+        <LocalParticipant participant={roomName.localParticipant} />
       )}
     </div>
   );
