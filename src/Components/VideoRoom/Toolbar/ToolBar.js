@@ -7,7 +7,7 @@ import {
   faMicrophoneSlash,
   faVideoSlash,
 } from "@fortawesome/free-solid-svg-icons";
-
+import "./ToolBar.css";
 import { connect } from "react-redux";
 
 const ToolBar = (props) => {

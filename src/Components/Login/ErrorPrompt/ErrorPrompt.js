@@ -5,7 +5,7 @@ const ErrorPrompt = ({ setErrorStatus }) => {
     setTimeout(() => {
       setErrorStatus(false);
     }, 4000);
-  }, []);
+  }, [setErrorStatus]);
   return <span className="error-prompt">Please enter a username!</span>;
 };
 
