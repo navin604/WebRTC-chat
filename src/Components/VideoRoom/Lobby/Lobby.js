@@ -48,14 +48,31 @@ const Lobby = ({ username, setRoomName }) => {
 
   return (
     <div className="lobby-wrapper">
-      <input
-        value={roomName}
-        onChange={(e) => {
-          setRoomNameState(e.target.value);
-        }}
-        placeholder="Enter a room name"
-      ></input>
-      <button value="Submit" onClick={handleFormSubmit}></button>
+      <div className="lobby-prompt">
+        <div className="title">
+          <h1>Welcome to QuickVid!</h1>
+          <p>
+            Join a Twilio room via the prompt below, or join a p2p room using
+            create room
+          </p>
+        </div>
+        <div className="room-prompt">
+          <input
+            value={roomName}
+            onChange={(e) => {
+              setRoomNameState(e.target.value);
+            }}
+            placeholder="Enter a room name"
+          ></input>
+          <button
+            className="lobby-button"
+            value="Submit"
+            onClick={handleFormSubmit}
+          >
+            Submit
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
