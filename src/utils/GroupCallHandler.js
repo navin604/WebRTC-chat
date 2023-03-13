@@ -7,6 +7,7 @@ import {
   setP2PCallActive,
   setP2PCallIncomingStreams,
 } from "../store/Actions/CallActions";
+import { getTurnServers } from "./TURN";
 
 let peer;
 let peerID;
@@ -15,9 +16,9 @@ let p2pRoomOwner = null;
 
 export const establishPeerConnection = () => {
   peer = new window.Peer(undefined, {
-    path: "/peerjs",
-    host: "/",
-    port: "7000",
+    config: {
+      iceServers: [...getTurnServers(), { url: "stun:stun.1und1.de:3478" }],
+    },
   });
 
   peer.on("open", (ID) => {
