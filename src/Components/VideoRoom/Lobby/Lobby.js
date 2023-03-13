@@ -14,7 +14,7 @@ const Lobby = ({ username, setRoomName }) => {
       console.log("Clicked submit, handling form");
       const req = { roomName: roomName, identity: username };
       const response = await fetch(
-        "http://quickvid.westus3.cloudapp.azure.com:7000/join-room",
+        "https://quickvid-backend.herokuapp.com/join-room",
         {
           method: "POST",
           headers: {

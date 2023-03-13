@@ -2,7 +2,7 @@ import socketClient from "socket.io-client";
 import store from "../store/Store";
 import * as broadcastActions from "../store/Actions/DashboardActions";
 import * as GroupCallHandler from "./GroupCallHandler";
-const SERVER = "http://quickvid.westus3.cloudapp.azure.com:7000/";
+const SERVER = "https://quickvid-backend.herokuapp.com/";
 let socket;
 
 const broadcastEventTypes = {
