@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import axios from "axios";
 import "./VideoRoom.css";
 import { callStatus } from "../../store/Actions/CallActions";
 import Participants from "./Participants/Participants";
@@ -15,6 +16,7 @@ import {
   setCameraEnabled,
   setMicEnabled,
 } from "../../store/Actions/CallActions";
+import { setTurnServers } from "../../utils/TURN";
 
 const VideoRoom = (props) => {
   const {
@@ -29,8 +31,17 @@ const VideoRoom = (props) => {
   } = props;
 
   useEffect(() => {
-    GroupCallHandler.establishPeerConnection();
-    getLocalStream();
+    axios
+      .get("http://localhost:7000/api/get-turn-credentials")
+      .then((responseData) => {
+        console.log(responseData);
+        setTurnServers(responseData.data.token.iceServers);
+        GroupCallHandler.establishPeerConnection();
+        getLocalStream();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
   const returnToLobby = async () => {

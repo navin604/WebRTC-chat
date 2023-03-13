@@ -3,12 +3,29 @@ const { v4: uuidv4 } = require("uuid");
 const AccessToken = require("twilio").jwt.AccessToken;
 const VideoGrant = AccessToken.VideoGrant;
 const express = require("express");
-const app = express();
+const twilio = require("twilio");
 const cors = require("cors");
 const PORT = process.env.PORT || 8080;
 const { ExpressPeerServer } = require("peer");
 const socket = require("socket.io");
 const groupCallHandler = require("./peerCall");
+
+const app = express();
+
+app.use(cors());
+
+app.get("/", (req, res) => {
+  res.send({ api: "quickvid-api" });
+});
+
+app.get("/api/get-turn-credentials", (req, res) => {
+  // place here  your Twilio credentials !!
+  const accountSid = process.env.TWILIO_ACCOUNT_SID;
+  const authToken = process.env.TWILIO_AUTH_TOKEN;
+  const client = twilio(accountSid, authToken);
+
+  client.tokens.create().then((token) => res.send({ token }));
+});
 
 let peers = [];
 let p2pCallRooms = [];
@@ -20,8 +37,6 @@ const broadcastEventTypes = {
 
 // Use Express JSON Middleware
 app.use(express.json());
-
-app.use(cors());
 
 // Start express server
 const server = app.listen(PORT, () => {
