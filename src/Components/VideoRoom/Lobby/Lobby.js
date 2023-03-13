@@ -13,14 +13,17 @@ const Lobby = ({ username, setRoomName }) => {
     try {
       console.log("Clicked submit, handling form");
       const req = { roomName: roomName, identity: username };
-      const response = await fetch("http://localhost:7000/join-room", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(req),
-      });
+      const response = await fetch(
+        "http://quickvid.westus3.cloudapp.azure.com:7000/join-room",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(req),
+        }
+      );
       const { token } = await response.json();
       console.log(`Received token: ${token}`);
       setToken(token);

@@ -32,7 +32,9 @@ const VideoRoom = (props) => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:7000/api/get-turn-credentials")
+      .get(
+        "http://quickvid.westus3.cloudapp.azure.com:7000/api/get-turn-credentials"
+      )
       .then((responseData) => {
         console.log(responseData);
         setTurnServers(responseData.data.token.iceServers);
