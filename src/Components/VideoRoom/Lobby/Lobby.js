@@ -7,7 +7,7 @@ import debounce from "lodash.debounce";
 const Lobby = ({ username, setRoomName }) => {
   const [roomName, setRoomNameState] = useState("");
   const [token, setToken] = useState("");
-
+  const [full, setFull] = useState(false);
   const handleFormSubmit = async () => {
     console.log(` roomname: ${roomName}`);
     try {
@@ -41,12 +41,18 @@ const Lobby = ({ username, setRoomName }) => {
       setRoomName(room);
       return room;
     } catch (error) {
-      console.log(`error on connect`);
+      console.log(`Room full`);
       console.log(error);
+      setFull(true);
+      resetFull();
     }
     console.log(token);
   };
-
+  const resetFull = () => {
+    setTimeout(() => {
+      setFull(false);
+    }, 4000);
+  };
   return (
     <div className="lobby-wrapper">
       <div className="lobby-prompt">
@@ -65,9 +71,11 @@ const Lobby = ({ username, setRoomName }) => {
             }}
             placeholder="Enter a room name"
           ></input>
+          {full === true && <span className="room-error">Room is full!</span>}
           <button className="lobby-button" value="Submit" onClick={onClick}>
             Submit
           </button>
+          <br />
         </div>
       </div>
     </div>

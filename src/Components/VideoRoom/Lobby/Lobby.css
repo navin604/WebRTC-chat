@@ -4,6 +4,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
 
 }
 
@@ -26,8 +27,15 @@ p {
     justify-content: center;
     align-items: center;
     position: relative;
+    flex-direction: column;
 
 }
 .lobby-button {
     margin-left: 10px;
+}
+
+.room-error {
+    color: red;
+    padding-bottom: 4px;
+
 }
