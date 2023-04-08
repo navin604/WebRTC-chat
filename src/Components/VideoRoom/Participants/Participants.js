@@ -33,12 +33,23 @@ const Participants = ({ returnToLobby, roomName }) => {
     window.addEventListener("beforeunload", returnToLobby);
   }, [roomName, returnToLobby]);
 
+  const handleCheck = (participant) => {
+    // console.log(`chceking : ${participant}`);
+    // console.log(
+    //   remoteParticipants.some((item) => item.identity === participant.identity)
+    // );
+    return remoteParticipants.some(
+      (item) => item.identity === participant.identity
+    );
+  };
   const addParticipant = (participant) => {
     console.log(`${participant} connected!`);
-    setRemoteParticipants((prevParticipants) => [
-      ...prevParticipants,
-      participant,
-    ]);
+    if (!handleCheck(participant)) {
+      setRemoteParticipants((prevParticipants) => [
+        ...prevParticipants,
+        participant,
+      ]);
+    }
   };
   const removeParticipant = (participant) => {
     console.log(`${participant} disconnected!`);
@@ -56,6 +67,7 @@ const Participants = ({ returnToLobby, roomName }) => {
       }}
       className="participants"
     >
+      {console.log(`${remoteParticipants}`)}
       {remoteParticipants.map((participant) => (
         <Participant
           key={participant.identity}
