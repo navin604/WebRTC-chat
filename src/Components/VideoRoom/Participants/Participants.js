@@ -24,23 +24,24 @@ const Participants = ({ returnToLobby, roomName }) => {
     roomName.on("participantConnected", (participant) =>
       addParticipant(participant)
     );
-
-    //Clean up
     roomName.on("participantDisconnected", (participant) =>
       removeParticipant(participant)
     );
     window.addEventListener("pagehide", returnToLobby);
     window.addEventListener("beforeunload", returnToLobby);
-  }, [roomName, returnToLobby]);
+
+    //Clean up
+    return () => {
+      roomName.off("participantConnected", addParticipant);
+      roomName.off("participantDisconnected", removeParticipant);
+      window.removeEventListener("pagehide", returnToLobby);
+      window.removeEventListener("beforeunload", returnToLobby);
+    };
+  }, []);
 
   const handleCheck = (participant) => {
-    // console.log(`chceking : ${participant}`);
-    // console.log(
-    //   remoteParticipants.some((item) => item.identity === participant.identity)
-    // );
-    return remoteParticipants.some(
-      (item) => item.identity === participant.identity
-    );
+    console.log(remoteParticipants.some((item) => item[0] === participant[0]));
+    return remoteParticipants.some((item) => item[0] === participant[0]);
   };
   const addParticipant = (participant) => {
     console.log(`${participant} connected!`);
