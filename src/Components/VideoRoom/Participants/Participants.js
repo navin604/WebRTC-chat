@@ -40,8 +40,8 @@ const Participants = ({ returnToLobby, roomName }) => {
   }, []);
 
   const handleCheck = (participant) => {
-    console.log(remoteParticipants.some((item) => item[0] === participant[0]));
-    return remoteParticipants.some((item) => item[0] === participant[0]);
+    console.log(remoteParticipants.some((item) => item === participant));
+    return remoteParticipants.some((item) => item === participant);
   };
   const addParticipant = (participant) => {
     console.log(`${participant} connected!`);
